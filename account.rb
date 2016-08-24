@@ -1,15 +1,18 @@
+require_relative 'owner'
+
 module Bank
   class Account
-    attr_accessor :balance, :id
+    attr_accessor :balance, :id, :owner
 
-    def initialize(start_balance) #start_balance = Float or Fixnum
-      if start_balance.to_f >= 0 && ( start_balance.class == Float || start_balance.class == Fixnum )
-        @balance = start_balance.to_f
+    def initialize(owner, start_balance) #start_balance = Fixnum (cents)
+      if start_balance.to_f >= 0 && start_balance.class == Fixnum
+        @balance = start_balance
       else
-        raise ArgumentError, "Start balance must be a positive number"
+        raise ArgumentError, "Start balance must be a positive integer (balance of account in cents)"
       end
 
       @id = rand(1000000..9999999)
+      @owner = owner
 
       #@todo ? - rescue?
       #start_balance.to_f < 0 || ( start_balance.class == Float || start_balance.class == Fixnum ) puts "Rescue"

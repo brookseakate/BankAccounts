@@ -1,6 +1,3 @@
-# @todo link owners & accounts
-# @todo line 39: separate out street number from street name
-
 require 'csv'
 
 module Bank
@@ -20,8 +17,6 @@ module Bank
       @email_address = owner_info_hash[:email_address]
     end
 
-    # self.all - returns a collection of Owner instances, representing all of the Owners described in the CSV. See below for the CSV file specifications
-    #
     # The data, in order in the CSV, consists of:
     # ID - (Fixnum) a unique identifier for that Owner
     # Last Name - (String) the owner's last name
@@ -32,14 +27,25 @@ module Bank
     def self.all
       all_owners = {}
       CSV.open('support/owners.csv').each do |line|
+        # split Street Address data in csv into street_number & street_name
+        s_address = line[3].split
+        s_num = s_address[0]
+        s_name = s_address[1..-1].join(' ')
+        # s_num = line[3].split[0]
+        # s_name = line[3].split[1..-1].join(' ')
+
+        # populate a hash of owner info from each CSV line
         new_owner_hash = {
           owner_id: line[0].to_i,
           last_name: line[1],
           first_name: line[2],
-          street_name: line[3], #@todo - separate out street number from street name
+          street_number: s_num,
+          street_name: s_name,
           city: line[4],
           state: line[5]
         }
+
+        # pass new_owner_hash to Owner constructor, add each new account to all_owners hash, using owner_id as key
         all_owners[line[0].to_i] = self.new(new_owner_hash)
       end
       return all_owners
@@ -50,5 +56,5 @@ module Bank
       return self.all[id]
     end
 
-  end # Owner
-end # Bank
+  end # Owner class
+end # Bank module

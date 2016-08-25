@@ -1,10 +1,8 @@
-# @todo link owners & accounts
 # @todo integrate money gem
-# @todo line 24: try out rescue instead of ArgumentError? 
-
 
 require_relative 'owner'
 require 'csv'
+require 'awesome_print'
 
 module Bank
   class Account
@@ -20,9 +18,7 @@ module Bank
         @balance = start_balance
       else
         raise ArgumentError, "Start balance must be a positive integer (balance of account in cents)"
-      end # if
-      #@todo - rescue?
-      #start_balance.to_f < 0 || ( start_balance.class == Float || start_balance.class == Fixnum ) puts "Rescue"
+      end
 
       @account_id = account_id
       @owner = owner
@@ -54,9 +50,24 @@ module Bank
       return all_accounts
     end # self.all
 
+    # all_with_owner: create accounts with linked owners from CSVs
+
+    # To create the relationship between the accounts and the owners use the account_owners CSV file. The data for this file, in order in the CSV, consists of:
+    # Account ID - (Fixnum) a unique identifier corresponding to an account
+    # Owner ID - (Fixnum) a unique identifier corresponding to an owner
+    def self.all_with_owner
+      all_owners = Owner.all
+      all_accounts = self.all
+      CSV.read('support/account_owners.csv').each do |line|
+        all_accounts[line[0].to_i].owner = all_owners[line[1].to_i]
+      end
+      ap all_accounts # @todo - remove/debug
+      return all_accounts
+    end # self.all
+
     def self.find(id)
       return self.all[id]
     end
 
-  end # Account
-end # Bank
+  end # Account class
+end # Bank module

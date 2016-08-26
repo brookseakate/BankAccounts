@@ -56,5 +56,20 @@ module Bank
       return self.all[id]
     end
 
+    # @todo - remove/debug
+    def print_props
+      puts "Owner info:"
+      puts "@owner_id = " + @owner_id.to_s if @owner_id != nil
+      puts "@first_name = " + @first_name.to_s if @first_name != nil
+      puts "@last_name = " + @last_name.to_s if @last_name != nil
+      puts "@street_number = " + @street_number.to_s if @street_number != nil
+      puts "@street_name = " + @street_name.to_s if @street_name != nil
+      puts "@city = " + @city.to_s if @city != nil
+      puts "@state = " + @state.to_s if @state != nil
+      puts "@zip = " + @zip.to_s if @zip != nil
+      puts "@phone_number = " + @phone_number.to_s if @phone_number != nil
+      puts "@email_address = " + @email_address.to_s if @email_address != nil
+    end # print_props
+
   end # Owner class
 end # Bank module

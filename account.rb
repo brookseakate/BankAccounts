@@ -1,4 +1,6 @@
 # @todo integrate money gem
+# @todo POODR-ize
+# @todo double-check rounding (savings_account account?)
 
 require_relative 'owner'
 require 'csv'
@@ -6,32 +8,52 @@ require 'awesome_print'
 
 module Bank
   class Account
+    MINIMUM_BALANCE = 0
+    WITHDRAWAL_FEE = 0
+
     attr_accessor :balance, :account_id, :owner, :open_date
 
     # initialize with parameters:
     # - account_id = Fixnum
     # - start_balance = Fixnum (cents)
     # - open_date = Datetime
-    # - owner = Owner (if passed no Owner object, initialize a default Owner named "The_Bank")
+    # - owner = Owner (If passed a Hash rather than an Owner object, attempt to
+    # initialize a new Owner from the Hash. If passed no owner argument,
+    # initialize a new Owner object with default last_name "The_Bank")
     def initialize(account_id, start_balance, open_date, owner = Owner.new({last_name: "The_Bank"}))
-      if start_balance.to_i >= 0 && start_balance.class == Fixnum
+      # Check that start_balance argument is a Fixnum & meets minimum balance
+      if start_balance.to_i >= self.class::MINIMUM_BALANCE && start_balance.class == Fixnum
         @balance = start_balance
       else
-        raise ArgumentError, "Start balance must be a positive integer (balance of account in cents)"
+        raise ArgumentError, "Start balance must be greater than minimum balance: #{ self.class::MINIMUM_BALANCE } cents"
+      end
+
+      # Check that owner argument is an Owner object
+      if owner.class != Owner
+        # If owner argument is a hash, attempt to initialize an Owner from it
+        if owner.class == Hash
+          owner = Owner.new(owner)
+        else
+          raise ArgumentError, "Invalid owner info provided"
+        end
       end
 
       @account_id = account_id
-      @owner = owner
       @open_date = open_date
+      @owner = owner
     end #initialize
 
     # withdraw method that accepts a single parameter which represents the amount of money that will be withdrawn.
     def withdraw(amount)
-      if amount <= @balance
+      # Make sure requested amount + withdrawal fee can be deducted without putting account below min balance
+      if @balance - amount - self.class::WITHDRAWAL_FEE >= self.class::MINIMUM_BALANCE
         @balance -= amount
+        @balance -= self.class::WITHDRAWAL_FEE
       else
-        puts "Insufficient funds: Cannot withdraw #{ amount } from account." +
-        " Current balance is: #{ @balance } cents."
+        puts "Insufficient funds: Cannot withdraw #{ amount } cents from account.",
+        "Minimum balance is #{ self.class::MINIMUM_BALANCE } cents. "+
+        "Withdrawal fee is #{ self.class::WITHDRAWAL_FEE } cents.",
+        "Current balance is: #{ @balance } cents."
       end
       return @balance
     end #withdraw
@@ -67,6 +89,15 @@ module Bank
 
     def self.find(id)
       return self.all[id]
+    end
+
+    # @todo - remove/debug
+    def print_props
+      puts self.class.to_s + " info:"
+      puts "@balance = " + @balance.to_s if @balance != nil
+      puts "@account_id = " + @account_id.to_s if @account_id != nil
+      puts "@open_date = " + @open_date.to_s if @open_date != nil
+      puts "@owner = " + @owner.to_s if @owner != nil
     end
 
   end # Account class

@@ -22,8 +22,5 @@ module Bank
       return interest
     end
 
-
-
-
   end # SavingsAccount class
 end # Bank module

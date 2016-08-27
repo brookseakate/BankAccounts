@@ -1,7 +1,3 @@
-# @todo integrate money gem
-# @todo POODR-ize
-# @todo double-check rounding (savings_account account?)
-
 require_relative 'owner'
 require 'csv'
 require 'awesome_print'
@@ -102,3 +98,8 @@ module Bank
 
   end # Account class
 end # Bank module
+
+# @todo integrate money gem (or print monetary values in $x.xx form)
+# @todo POODR-ize
+# @todo double-check rounding (in savings_account)
+# @todo throw ArgumentError if user enters any deposit or withdrawal amount argument other than a Fixnum > 0

@@ -14,15 +14,14 @@ module Bank
       @checks_used = 0
     end # initialize
 
+    # withdraw method is accessed directly from Account, no changes needed
+
     def charge_check_fee?
       if @checks_used >= 3
         return true
       end
-    end # charge_check_fee?
+    end # charge_check_fee? method
 
-    # #withdraw_using_check(amount): The input amount gets taken out of the account as a result of a check withdrawal. Returns the updated account balance.
-    # Allows the account to go into overdraft up to -$10 but not any lower
-    # The user is allowed three free check uses in one month, but any subsequent use adds a $2 transaction fee
     def withdraw_using_check(amount)
       if charge_check_fee?
         fee_this_transaction = self.class::CHECK_TRANSACTION_FEE
@@ -42,27 +41,11 @@ module Bank
         "Current balance is: #{ @balance } cents."
       end
       return @balance
-
-      # if charge_check_fee?
-      #   balance_deduction = amount + self.class::CHECK_TRANSACTION_FEE
-      # else
-      #   balance_deduction = amount
-      # end
-
-      # if balance_deduction >= self.class::MINIMUM_BALANCE_USING_CHECK
-      #   @balance -= balance_deduction
-      #   @checks_used += 1
-      # else
-      #   puts "Insufficient funds: Cannot withdraw #{ amount } cents from account.",
-      #   "Minimum balance using a check is #{ self.class::MINIMUM_BALANCE_USING_CHECK } cents. "+
-      #   "Current balance is: #{ @balance } cents."
-      # end
-      # return @balance
-    end # withdraw_using_check
+    end # withdraw_using_check method
 
     def reset_checks
       @checks_used = 0
-    end
+    end # reset_checks method
 
   end # Account class
 end # Bank module

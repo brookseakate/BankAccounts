@@ -1,8 +1,7 @@
-# @todo tests:
-# - attempt to create Account with balance < 0
-# - attempt to create SavingsAccount with balance < 10
-# - attempt to withdraw from SavingsAccount & leave balance < 10
-# - add interest to SavingsAccount
+# @todo tests: (ran in irb but didn't add here)
+# - show adding interest to SavingsAccount
+# - show transaction fees with withdraw_using_check
+# - show reset_checks
 
 require_relative 'owner'
 require_relative 'account'

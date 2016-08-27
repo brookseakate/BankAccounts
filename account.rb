@@ -41,7 +41,7 @@ module Bank
 
     # withdraw method that accepts a single parameter which represents the amount of money that will be withdrawn.
     def withdraw(amount)
-      # Make sure requested amount + withdrawal fee can be deducted without putting account below min balance
+      # Make sure requested amount + withdrawal fee can be deducted without leaving account below min balance
       if @balance - amount - self.class::WITHDRAWAL_FEE >= self.class::MINIMUM_BALANCE
         @balance -= amount
         @balance -= self.class::WITHDRAWAL_FEE
@@ -60,6 +60,7 @@ module Bank
       return @balance
     end #deposit
 
+    # self.all: generate accounts from CSV info (accounts returned in a hash)
     def self.all
       all_accounts = {}
       CSV.read('support/accounts.csv').each do |line|
@@ -68,11 +69,7 @@ module Bank
       return all_accounts
     end # self.all
 
-    # all_with_owner: create accounts with linked owners from CSVs
-
-    # To create the relationship between the accounts and the owners use the account_owners CSV file. The data for this file, in order in the CSV, consists of:
-    # Account ID - (Fixnum) a unique identifier corresponding to an account
-    # Owner ID - (Fixnum) a unique identifier corresponding to an owner
+    # self.all_with_owner: create accounts with linked owners from CSVs
     def self.all_with_owner
       all_owners = Owner.all
       all_accounts = self.all
@@ -87,7 +84,7 @@ module Bank
       return self.all[id]
     end
 
-    # @todo - remove/debug
+    # @todo remove this method - for debug
     def print_props
       puts self.class.to_s + " info:"
       puts "@balance = " + @balance.to_s if @balance != nil
@@ -98,8 +95,8 @@ module Bank
 
   end # Account class
 end # Bank module
-
+############################################################################
 # @todo integrate money gem (or print monetary values in $x.xx form)
-# @todo POODR-ize
+# @todo POODR-ize some more
 # @todo double-check rounding (in savings_account)
 # @todo throw ArgumentError if user enters any deposit or withdrawal amount argument other than a Fixnum > 0

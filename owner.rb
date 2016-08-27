@@ -17,13 +17,7 @@ module Bank
       @email_address = owner_info_hash[:email_address]
     end
 
-    # The data, in order in the CSV, consists of:
-    # ID - (Fixnum) a unique identifier for that Owner
-    # Last Name - (String) the owner's last name
-    # First Name - (String) the owner's first name
-    # Street Addess - (String) the owner's street address
-    # City - (String) the owner's city
-    # State - (String) the owner's state
+    # Generate Owners from CSV (returned in a hash)
     def self.all
       all_owners = {}
       CSV.open('support/owners.csv').each do |line|
@@ -31,8 +25,6 @@ module Bank
         s_address = line[3].split
         s_num = s_address[0]
         s_name = s_address[1..-1].join(' ')
-        # s_num = line[3].split[0]
-        # s_name = line[3].split[1..-1].join(' ')
 
         # populate a hash of owner info from each CSV line
         new_owner_hash = {
@@ -56,7 +48,7 @@ module Bank
       return self.all[id]
     end
 
-    # @todo - remove/debug
+    # @todo remove this method - for debug
     def print_props
       puts "Owner info:"
       puts "@owner_id = " + @owner_id.to_s if @owner_id != nil
